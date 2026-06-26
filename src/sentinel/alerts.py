@@ -16,7 +16,10 @@ class AlertManager:
         if self.tg_token and self.tg_chat:
             self._send_telegram(target, result, prev_status)
 
-        # Can add more channels here: Slack, Discord, email, etc.
+    def send_trend(self, target: Target, trend: dict):
+        """Send alert on trend degradation."""
+        if self.tg_token and self.tg_chat:
+            self._send_telegram_trend(target, trend)
 
     def _send_telegram(self, target: Target, result: CheckResult, prev_status: str):
         try:
@@ -51,3 +54,22 @@ class AlertManager:
             )
         except Exception:
             pass  # Silently fail — alerts shouldn't break monitoring
+
+    def _send_telegram_trend(self, target: Target, trend: dict):
+        try:
+            import httpx
+            level = trend.get("level", "unknown")
+            msg = trend.get("message", "No details")
+            text = (
+                "\u26a0 <b>{name}</b> trend alert\n"
+                "Level: <b>{level}</b>\n"
+                "{msg}"
+            ).format(name=target.name, level=level.upper(), msg=msg)
+
+            httpx.post(
+                "https://api.telegram.org/bot{}/sendMessage".format(self.tg_token),
+                json={"chat_id": self.tg_chat, "text": text, "parse_mode": "HTML"},
+                timeout=10,
+            )
+        except Exception:
+            pass

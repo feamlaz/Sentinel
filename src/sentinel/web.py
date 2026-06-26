@@ -19,6 +19,31 @@ from .services import (
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
 
+def _get_latency_history(db, target_id, hours=24):
+    """Get latency data points for sparkline chart."""
+    results = db.get_results(target_id, limit=200)
+    now = datetime.now()
+    cutoff = now.timestamp() - (hours * 3600)
+
+    points = []
+    for r in reversed(results):  # oldest first
+        if r.latency_ms is not None and r.checked_at:
+            ts = r.checked_at.timestamp()
+            if ts >= cutoff:
+                points.append({
+                    "latency": r.latency_ms,
+                    "status": r.status,
+                    "time": r.checked_at.strftime("%H:%M"),
+                })
+    return points
+
+
+def _get_trend_info(db, target_id):
+    """Get trend analysis for a target."""
+    from .trends import analyze_trend
+    return analyze_trend(db, target_id)
+
+
 def create_app(db_path=None):
     app = FastAPI(title="Sentinel", docs_url=None, redoc_url=None)
     templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
@@ -36,6 +61,11 @@ def create_app(db_path=None):
 
         for t in targets:
             r = latest.get(t.id)
+            # Latency history for sparkline
+            history = _get_latency_history(db, t.id if t.id else 0, hours=24)
+            # Trend analysis
+            trend = _get_trend_info(db, t.id if t.id else 0)
+
             if r:
                 s = r.status
                 if s == STATUS_OK:
@@ -63,6 +93,8 @@ def create_app(db_path=None):
                     "message": r.message,
                     "checked_at": r.checked_at.strftime("%H:%M:%S") if r.checked_at else "\u2014",
                     "details": json.loads(r.details) if r.details else {},
+                    "history": history,
+                    "trend": trend,
                 })
             else:
                 down_count += 1
@@ -84,6 +116,8 @@ def create_app(db_path=None):
                     "message": "No data yet",
                     "checked_at": "\u2014",
                     "details": {},
+                    "history": [],
+                    "trend": {"level": "none", "message": "No data"},
                 })
 
         total = len(targets)
@@ -124,6 +158,14 @@ def create_app(db_path=None):
                 "uptime": db.get_uptime(t.id),
             })
         return data
+
+    @app.get("/api/history/{target_id}")
+    async def api_history(target_id: int, hours: int = 24):
+        return _get_latency_history(db, target_id, hours)
+
+    @app.get("/api/trend/{target_id}")
+    async def api_trend(target_id: int):
+        return _get_trend_info(db, target_id)
 
     @app.on_event("shutdown")
     def shutdown():

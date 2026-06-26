@@ -15,6 +15,7 @@ from .services import (
     STATUS_ICONS, STATUS_COLORS, CHECK_TYPE_ICONS,
     format_latency, format_uptime, make_dashboard_panel,
 )
+from .trends import analyze_trend, TREND_LEVELS
 from .banner import get_banner
 
 console = Console()
@@ -196,6 +197,15 @@ def check(ctx, target_id):
             line.append(" ({})".format(format_latency(result.latency_ms)), style="dim")
         console.print(line)
 
+        # Trend analysis
+        if target.id:
+            trend = analyze_trend(db, target.id)
+            if trend.get("level") not in ("none", "stable"):
+                t_info = TREND_LEVELS.get(trend["level"], {})
+                t_color = t_info.get("color", "#6b7280")
+                t_icon = t_info.get("icon", "")
+                console.print("    {} [{}]Trend: {}[/]".format(t_icon, t_color, trend.get("message", "")))
+
     console.print()
 
 
@@ -245,6 +255,7 @@ def cron(ctx, interval, telegram_token, telegram_chat):
     """Run checks on schedule (blocking)."""
     import time
     from .alerts import AlertManager
+    from .trends import analyze_trend, should_alert_trend
 
     db = _db(ctx)
     alert_mgr = AlertManager(telegram_token=telegram_token, telegram_chat=telegram_chat)
@@ -259,6 +270,11 @@ def cron(ctx, interval, telegram_token, telegram_chat):
             # Alert on status change
             if prev and prev != result.status:
                 alert_mgr.send(target, result, prev)
+            # Alert on trend degradation
+            if target.id and result.status == STATUS_OK:
+                trend = analyze_trend(db, target.id)
+                if should_alert_trend(trend):
+                    alert_mgr.send_trend(target, trend)
             prev_statuses[target.id] = result.status
 
         now = datetime.now().strftime("%H:%M:%S")

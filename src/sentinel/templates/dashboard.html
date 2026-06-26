@@ -16,112 +16,67 @@
       --ok: #22c55e;
       --warn: #fbbf24;
       --down: #ef4444;
+      --rising: #f97316;
       --radius: 14px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
+      background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh;
     }
     .header {
-      background: var(--card);
-      padding: 2.5rem 2rem 2rem;
-      text-align: center;
-      border-bottom: 3px solid var(--accent);
-      position: relative;
-      overflow: hidden;
+      background: var(--card); padding: 2.5rem 2rem 2rem; text-align: center;
+      border-bottom: 3px solid var(--accent); position: relative; overflow: hidden;
     }
     .header::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: 50%; transform: translateX(-50%);
+      content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
       width: 600px; height: 600px;
       background: radial-gradient(circle, rgba(14,47,118,0.3) 0%, transparent 70%);
       pointer-events: none;
     }
-    .header h1 {
-      font-size: 2rem; font-weight: 800; color: #fff;
-      letter-spacing: -0.02em; margin-bottom: 0.5rem;
-      position: relative;
-    }
+    .header h1 { font-size: 2rem; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 0.5rem; position: relative; }
     .header h1 span { color: var(--accent); }
-    .summary-row {
-      display: flex; justify-content: center; gap: 1.5rem;
-      position: relative; flex-wrap: wrap;
-    }
-    .summary-item {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 1.05rem; font-weight: 600;
-    }
-    .summary-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-    }
+    .summary-row { display: flex; justify-content: center; gap: 1.5rem; position: relative; flex-wrap: wrap; }
+    .summary-item { display: flex; align-items: center; gap: 0.5rem; font-size: 1.05rem; font-weight: 600; }
+    .summary-dot { width: 10px; height: 10px; border-radius: 50%; }
     .summary-dot.ok { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
     .summary-dot.warn { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
     .summary-dot.down { background: var(--down); box-shadow: 0 0 8px var(--down); animation: pulse 2s infinite; }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
     .main { max-width: 950px; margin: 0 auto; padding: 2rem 1.5rem; }
 
     .overall-banner {
-      text-align: center;
-      padding: 1rem;
-      border-radius: var(--radius);
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      letter-spacing: 0.05em;
+      text-align: center; padding: 1rem; border-radius: var(--radius);
+      margin-bottom: 1.5rem; font-weight: 700; font-size: 1.1rem; letter-spacing: 0.05em;
     }
     .overall-banner.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: var(--ok); }
     .overall-banner.warn { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--warn); }
     .overall-banner.down { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--down); }
 
     .target-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid var(--text-dim);
-      transition: all 0.2s;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 1rem;
-      align-items: center;
+      background: var(--card); border-radius: var(--radius); padding: 1.5rem 1.75rem;
+      margin-bottom: 1rem; border-left: 4px solid var(--text-dim);
+      transition: all 0.2s; display: flex; flex-direction: column; gap: 0.75rem;
     }
     .target-card:hover { background: var(--card-hover); }
     .target-card.status-ok { border-left-color: var(--ok); }
     .target-card.status-warn { border-left-color: var(--warn); }
     .target-card.status-down { border-left-color: var(--down); }
 
-    .card-status {
-      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-    }
+    .card-top { display: flex; align-items: center; gap: 1rem; }
+    .card-status { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; min-width: 56px; }
     .status-icon { font-size: 1.8rem; }
     .status-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .status-label.ok { color: var(--ok); }
     .status-label.warn { color: var(--warn); }
     .status-label.down { color: var(--down); }
-
-    .card-info h3 {
-      font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem;
-    }
-    .card-meta {
-      display: flex; gap: 0.8rem; font-size: 0.82rem; color: var(--text-dim);
-      flex-wrap: wrap; margin-bottom: 0.5rem;
-    }
+    .card-info { flex: 1; }
+    .card-info h3 { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+    .card-meta { display: flex; gap: 0.8rem; font-size: 0.82rem; color: var(--text-dim); flex-wrap: wrap; margin-bottom: 0.4rem; }
     .card-meta span { display: flex; align-items: center; gap: 0.3rem; }
     .card-msg { font-size: 0.88rem; color: var(--accent); }
-
-    .card-metrics {
-      text-align: right; min-width: 100px;
-    }
+    .card-metrics { text-align: right; min-width: 90px; }
     .metric-value { font-size: 1.4rem; font-weight: 700; }
     .metric-value.ok { color: var(--ok); }
     .metric-value.warn { color: var(--warn); }
@@ -129,15 +84,27 @@
     .metric-label { font-size: 0.75rem; color: var(--text-dim); }
     .metric-uptime { font-size: 0.85rem; color: var(--accent); margin-top: 0.3rem; }
 
-    /* Latency bar */
-    .latency-bar {
-      height: 4px; border-radius: 2px; background: rgba(255,255,255,0.05);
-      margin-top: 0.5rem; overflow: hidden;
+    .sparkline-wrap {
+      background: rgba(255,255,255,0.03); border-radius: 8px;
+      padding: 0.5rem 0.75rem; min-height: 52px;
     }
-    .latency-bar-fill {
-      height: 100%; border-radius: 2px;
-      transition: width 0.5s ease;
+    .sparkline-header {
+      font-size: 0.68rem; color: var(--text-dim); margin-bottom: 0.2rem;
+      display: flex; justify-content: space-between;
     }
+    .sparkline-canvas { width: 100%; height: 40px; display: block; }
+
+    .trend-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem;
+      border-radius: 5px; margin-left: 0.5rem;
+    }
+    .trend-badge.stable { background: rgba(34,197,94,0.12); color: var(--ok); }
+    .trend-badge.rising { background: rgba(249,115,22,0.12); color: var(--rising); }
+    .trend-badge.spiking { background: rgba(239,68,68,0.12); color: var(--down); }
+    .trend-badge.degrading { background: rgba(239,68,68,0.15); color: var(--down); }
+    .trend-badge.none { background: rgba(107,127,158,0.12); color: var(--text-dim); }
+    .trend-message { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.25rem; }
 
     .footer {
       text-align: center; padding: 2rem; color: var(--text-dim);
@@ -147,8 +114,8 @@
 
     @media (max-width: 600px) {
       .header h1 { font-size: 1.5rem; }
-      .target-card { grid-template-columns: auto 1fr; }
-      .card-metrics { grid-column: 1 / -1; text-align: left; }
+      .card-top { flex-wrap: wrap; }
+      .card-metrics { min-width: auto; }
     }
   </style>
 </head>
@@ -157,21 +124,12 @@
   <header class="header">
     <h1>SENTINEL <span>\u2014</span> Status</h1>
     <div class="summary-row">
-      <div class="summary-item">
-        <span class="summary-dot ok"></span>
-        {{ ok_count }} OK
-      </div>
+      <div class="summary-item"><span class="summary-dot ok"></span> {{ ok_count }} OK</div>
       {% if warn_count %}
-      <div class="summary-item">
-        <span class="summary-dot warn"></span>
-        {{ warn_count }} WARN
-      </div>
+      <div class="summary-item"><span class="summary-dot warn"></span> {{ warn_count }} WARN</div>
       {% endif %}
       {% if down_count %}
-      <div class="summary-item">
-        <span class="summary-dot down"></span>
-        {{ down_count }} DOWN
-      </div>
+      <div class="summary-item"><span class="summary-dot down"></span> {{ down_count }} DOWN</div>
       {% endif %}
     </div>
   </header>
@@ -186,30 +144,48 @@
     {% endif %}
 
     {% for t in targets %}
-    <div class="target-card status-{{ t.status }}">
-      <div class="card-status">
-        <div class="status-icon">{{ t.status_emoji }}</div>
-        <div class="status-label {{ t.status }}">{{ t.status }}</div>
-      </div>
-      <div class="card-info">
-        <h3>{{ t.type_icon }} {{ t.name }}</h3>
-        <div class="card-meta">
-          <span>{{ t.check_type }}</span>
-          <span>{{ t.host }}{% if t.port %}:{{ t.port }}{% endif %}</span>
-          <span>checked {{ t.checked_at }}</span>
+    <div class="target-card status-{{ t.status }}" data-id="{{ t.id }}">
+      <div class="card-top">
+        <div class="card-status">
+          <div class="status-icon">{{ t.status_emoji }}</div>
+          <div class="status-label {{ t.status }}">{{ t.status }}</div>
         </div>
-        <div class="card-msg">{{ t.message }}</div>
-        {% if t.latency_ms %}
-        <div class="latency-bar">
-          <div class="latency-bar-fill" style="width: {{ [t.latency_ms / 10, 100]|min|int }}%; background: {{ t.status_color }};"></div>
+        <div class="card-info">
+          <h3>
+            {{ t.type_icon }} {{ t.name }}
+            {% if t.trend and t.trend.level not in ["none", "stable"] %}
+            <span class="trend-badge {{ t.trend.level }}">{{ t.trend.level | upper }}</span>
+            {% endif %}
+          </h3>
+          <div class="card-meta">
+            <span>{{ t.check_type }}</span>
+            <span>{{ t.host }}{% if t.port %}:{{ t.port }}{% endif %}</span>
+            <span>checked {{ t.checked_at }}</span>
+          </div>
+          <div class="card-msg">{{ t.message }}</div>
         </div>
-        {% endif %}
+        <div class="card-metrics">
+          <div class="metric-value {{ t.status }}">{{ t.latency }}</div>
+          <div class="metric-label">latency</div>
+          <div class="metric-uptime">{{ t.uptime }} up</div>
+        </div>
       </div>
-      <div class="card-metrics">
-        <div class="metric-value {{ t.status }}">{{ t.latency }}</div>
-        <div class="metric-label">latency</div>
-        <div class="metric-uptime">{{ t.uptime }} up</div>
+
+      <!-- Sparkline canvas (drawn by JS) -->
+      {% if t.history | length > 2 %}
+      <div class="sparkline-wrap">
+        <div class="sparkline-header">
+          <span>24h latency</span>
+          <span>{{ t.history[-1].time }} \u2014 {{ t.history[0].time }}</span>
+        </div>
+        <canvas class="sparkline-canvas" data-points="{{ t.history | map(attribute='latency') | join(',') }}"
+          data-color="{{ t.status_color }}"></canvas>
       </div>
+      {% endif %}
+
+      {% if t.trend and t.trend.level != "none" %}
+      <div class="trend-message">{{ t.trend.message }}</div>
+      {% endif %}
     </div>
     {% endfor %}
   </main>
@@ -218,5 +194,62 @@
     Sentinel \u2014 Last checked: {{ now }} \u2014 Auto-refresh: 60s
   </footer>
 
+  <script>
+    // Draw sparklines from data-points attribute
+    document.querySelectorAll('.sparkline-canvas').forEach(canvas => {
+      const pts = canvas.dataset.points.split(',').map(Number);
+      const color = canvas.dataset.color || '#A9C0E0';
+      if (pts.length < 2) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      const pad = 3;
+      const min = Math.min(...pts);
+      const max = Math.max(...pts);
+      const range = Math.max(max - min, 1);
+
+      // Area fill
+      ctx.beginPath();
+      pts.forEach((v, i) => {
+        const x = (i / (pts.length - 1)) * w;
+        const y = h - pad - ((v - min) / range) * (h - pad * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fillStyle = color + '18';
+      ctx.fill();
+
+      // Line
+      ctx.beginPath();
+      pts.forEach((v, i) => {
+        const x = (i / (pts.length - 1)) * w;
+        const y = h - pad - ((v - min) / range) * (h - pad * 2);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Last dot
+      const lastX = w;
+      const lastY = h - pad - ((pts[pts.length - 1] - min) / range) * (h - pad * 2);
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    });
+  </script>
 </body>
 </html>
